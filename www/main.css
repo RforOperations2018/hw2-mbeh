@@ -1,3 +1,5 @@
+/******************* GENERAL LAYOUT *******************/
+
 /* Sidebar styling */
 li {
   font-size: 20px;
@@ -16,6 +18,22 @@ li > a > span {
   background-color: unset;
 }
 
+/********** PLOTS AND DATATABLE PAGE STYLING **********/
+
+/* Increase tab container height for plotly graph */
+.tab-content {
+  height: 80vh;
+}
+/* Allow scrolling of datatable */
+.content-wrapper {
+  overflow-y: scroll;
+}
+.dataTables_wrapper {
+  overflow-x: scroll;
+}
+
+/********** CUSTOM STYLING FOR PAGE ELEMENTS **********/
+
 /* Button styling for green theme */
 .btn-default {
   color: #fff;
@@ -27,17 +45,10 @@ li > a > span {
   background-color: #008d4c;
   border-color: #008d4c;
 }
-
-/* Increase tab container height for plotly graph */
-.tab-content {
-  height: 80vh;
-}
-
 /* Button for downloading movie data */
 .btn-download {
   margin-bottom: 15px;
 }
-
 /* Position button within datatable only for big screens */
 @media (min-width: 767px){
   .btn-download {
@@ -47,16 +58,7 @@ li > a > span {
     z-index: 1;
   }
 }
-
-/* Allow scrolling of datatable */
-.content-wrapper {
-  overflow-y: scroll;
-}
-.dataTables_wrapper {
-  overflow-x: scroll;
-}
-
-/* Custom styling/position of notificatoins */
+/* Custom styling/position of notifications */
 #shiny-notification-panel {
   width: 300px;
   right: unset;
@@ -68,7 +70,8 @@ li > a > span {
   border: 1px solid #bcf1c0;
 }
 
-/* Responsive layout */
+/********** RESPONSIVE LAYOUT FOR MOBILE DEVICES **********/
+
 @media (max-width: 767px){
 
   /* improve header/navbar compactness */
