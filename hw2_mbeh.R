@@ -91,5 +91,33 @@ body <- dashboardBody(
 # Define ui comprising of header, sidebar and body (defined above)
 ui <- dashboardPage(header, sidebar, body, skin = "green")
 
+
+
+# Define server logic
+server <- function(input, output, session = session) {
+  
+  # Filtered movie data using reactive method
+  movieData <- reactive({
+    # Helper function for determining if a movie contains a genre within list of selected genres
+    movieMatchesGenreInput <- function(genresString, selectedGenres){
+      genresForEachRow = strsplit(genresString, ",")
+      outcome = c()
+      for(row in genresForEachRow){
+        outcome <- c(outcome, length(intersect(row, selectedGenres)) > 0)
+      }
+      return(outcome)
+    }
+    # Slider Filter for Release Year of Movie
+    movies <- movies.load %>% filter(release_year >= input$yearSelect[1] & release_year <= input$yearSelect[2],
+                                     # Numeric Filter for Minimum Revenue
+                                     revenue >= input$revenueMinimum)
+    
+    # Selection Filter for Movie Genre
+    if (length(input$genreSelect) > 0){
+      movies <- filter(movies, movieMatchesGenreInput(genres, input$genreSelect))
+    }
+    return(movies)
+  })
+}
 # Run the application 
 shinyApp(ui = ui, server = server, enableBookmarking = "url")
