@@ -29,9 +29,9 @@ sidebar <- dashboardSidebar(
   width = sidebarWidth,
   sidebarMenu(
     id = "tabs",
-    # Sidebar Menu for Plots & DataTable
-    menuItem("Visualizations", icon = icon("bar-chart"), tabName = "plots"),
+    # Sidebar Menu fo DataTable & Plots
     menuItem("Database", icon = icon("table"), tabName = "table"),
+    menuItem("Visualizations", icon = icon("bar-chart"), tabName = "plots"),
     # Range Slider for Movie Release Year
     sliderInput("yearSelect",
                 "Year of Movie Release:",
@@ -141,9 +141,9 @@ server <- function(input, output, session = session) {
     plot_ly(x = input$genreSelect, y = averageRatingForEachGenre, type = 'bar', 
             marker = list(color = brewer.pal(length(input$genreSelect), "Greens"))) %>%
       layout(title = "Average Ratings by Genre",
-             xaxis = list(title = "Year", titlefont = plotlyDefaultFont),
-             yaxis = list(title = "Amount in USD$", titlefont = plotlyDefaultFont),
-             height = 500)
+             xaxis = list(title = "Genre", titlefont = plotlyDefaultFont),
+             yaxis = list(title = "Average Ratings", titlefont = plotlyDefaultFont),
+             height = 400)
   })
   
   # A plot showing a line chart of movie budget and revenue over the years
