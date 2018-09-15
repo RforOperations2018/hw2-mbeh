@@ -116,6 +116,21 @@ server <- function(input, output, session = session) {
     }
     return(movies)
   })
+  
+  # A plot showing a line chart of movie budget and revenue over the years
+  output$plot_budget_and_revenue <- renderPlotly({
+    # Aggregate budget and revenue data by year
+    aggregatedDataByYear <- movieData() %>% group_by(release_year) %>% 
+      summarise(budget = mean(budget), revenue = mean(revenue))
+    # Plot movie budget and revenue over the years
+    plot_ly(aggregatedDataByYear, x = ~release_year, y = ~revenue, name = 'Revenue', type = 'scatter', mode = 'lines+markers') %>%
+      add_trace(y = ~budget, name = 'Budget', mode = 'lines+markers') %>%
+      layout(title = "Over the years: Average Revenue vs Budget for Blockbusters",
+             xaxis = list(title = "Year", titlefont = plotlyDefaultFont),
+             yaxis = list(title = "Amount in USD$", titlefont = plotlyDefaultFont),
+             height = 500)
+  })
+  
   # A plot showing a histogram of movie durations
   output$plot_durations <- renderPlotly({
     plot_ly(x = movieData()$runtime, type = 'histogram') %>%
