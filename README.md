@@ -4,8 +4,8 @@ By: Min Yan BEH (mbeh)
 
 ### Screenshots
 
-![Screeenshot of Plot](screenshots/plots.png)
 ![Screeenshot of Data Table](screenshots/datatable.png)
+![Screeenshot of Plot](screenshots/plots.png)
 
 ### Data Source
 
