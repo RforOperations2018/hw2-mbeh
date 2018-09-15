@@ -82,6 +82,7 @@ body <- dashboardBody(
     # DataTable page, to be displayed when "Table" is clicked on sidebar
     tabItem("table",
             fluidPage(
+              # Interesting way to have the button show up ontop of the box with the custom CSS. Since I know you can handle it, I'd like you to have stuff like this mobile responsive in the future.
               downloadButton("downloadMovieData","Download Movie Data"),
               box(title = "Statistics on Movie Selection", DT::dataTableOutput("moviesTable"), width = 12))
     )
