@@ -91,8 +91,6 @@ body <- dashboardBody(
 # Define ui comprising of header, sidebar and body (defined above)
 ui <- dashboardPage(header, sidebar, body, skin = "green")
 
-
-
 # Define server logic
 server <- function(input, output, session = session) {
   
@@ -118,6 +116,16 @@ server <- function(input, output, session = session) {
     }
     return(movies)
   })
+  # A plot showing a histogram of movie durations
+  output$plot_durations <- renderPlotly({
+    plot_ly(x = movieData()$runtime, type = 'histogram') %>%
+      layout(title = "Histogram of Movie Durations",
+             xaxis = list(title = "Duration in Seconds", titlefont = plotlyDefaultFont),
+             yaxis = list(title = "Number of Movies", titlefont = plotlyDefaultFont),
+             height = 500)
+    
+  })
 }
+
 # Run the application 
 shinyApp(ui = ui, server = server, enableBookmarking = "url")
