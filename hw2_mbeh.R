@@ -117,6 +117,34 @@ server <- function(input, output, session = session) {
     return(movies)
   })
   
+  # A plot showing a bar chart of average ratings per genre
+  output$plot_ratings <- renderPlotly({
+    movies <- movieData()
+    # Helper method for converting genre name to its column name in the dataset
+    convertGenreToColname <- function(genre){
+      col_name = tolower(genre)
+      if(genre == 'Science Fiction'){
+        col_name = 'scifi'
+      }
+      col_name
+    }
+    # Calculate the average rating for each selected genre and add to vector
+    averageRatingForEachGenre = c()
+    for(genre in input$genreSelect){
+      print(genre)
+      moviesForThisGenre <- filter(movies, as.logical(movies[[convertGenreToColname(genre)]]))
+      print(nrow(moviesForThisGenre))
+      averageRatingForEachGenre <- c(averageRatingForEachGenre, mean(moviesForThisGenre$vote_average))
+    }
+    # Plot average ratings by MovieLens users for each genre
+    plot_ly(x = input$genreSelect, y = averageRatingForEachGenre, type = 'bar', 
+            marker = list(color = brewer.pal(length(input$genreSelect), "Greens"))) %>%
+      layout(title = "Average Ratings by Genre",
+             xaxis = list(title = "Year", titlefont = plotlyDefaultFont),
+             yaxis = list(title = "Amount in USD$", titlefont = plotlyDefaultFont),
+             height = 500)
+  })
+  
   # A plot showing a line chart of movie budget and revenue over the years
   output$plot_budget_and_revenue <- renderPlotly({
     # Aggregate budget and revenue data by year
