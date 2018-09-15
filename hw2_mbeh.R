@@ -169,8 +169,6 @@ server <- function(input, output, session = session) {
     
   })
   
-  
-  
   # Data table of Movies (based on reactive selection)
   output$moviesTable <- DT::renderDataTable({
     subset(movieData() %>% arrange(desc(release_year), desc(revenue)), 
@@ -200,6 +198,16 @@ server <- function(input, output, session = session) {
       showNotification("Success! You have selected all genres!", type = "message")
     }
   })
+  
+  # Download filtered data from the movie datatable
+  output$downloadMovieData <- downloadHandler(
+    filename = function() {
+      paste("movies-", Sys.Date(), ".csv", sep="")
+    },
+    content = function(file) {
+      write.csv(movieData(), file)
+    }
+  )
 }
 
 # Run the application 
