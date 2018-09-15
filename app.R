@@ -64,7 +64,8 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   # import custom css stylesheet
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "main.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "main.css"),
+    tags$link(rel = "shortcut icon", href = "favicon-database.ico")
   ),
   width = 400,
   tabItems(
@@ -89,7 +90,8 @@ body <- dashboardBody(
 )
 
 # Define ui comprising of header, sidebar and body (defined above)
-ui <- dashboardPage(header, sidebar, body, skin = "green")
+ui <- dashboardPage(title = "Movies DB",
+                    header, sidebar, body, skin = "green")
 
 # Define server logic
 server <- function(input, output, session = session) {
@@ -178,16 +180,7 @@ server <- function(input, output, session = session) {
   # Customize column names of Data Table
   colnames = c("Title", "Genre", "Release Date", "Budget", "Revenue", "Ratings (/10)")
   )
-  
-  # Bookmark functionality: updating the URL bar on user input
-  observe({
-    print(reactiveValuesToList(input))
-    session$doBookmark()
-  })
-  onBookmarked(function(url) {
-    updateQueryString(url)
-  })
-  
+
   # Observe clicks on 'Select All Genres' button
   observeEvent(input$selectAllGenres, {
     # Send error notification if all genres have already been selected
@@ -214,4 +207,4 @@ server <- function(input, output, session = session) {
 }
 
 # Run the application 
-shinyApp(ui = ui, server = server, enableBookmarking = "url")
+shinyApp(ui = ui, server = server)

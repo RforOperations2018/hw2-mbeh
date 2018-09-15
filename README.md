@@ -2,10 +2,14 @@
 
 By: Min Yan BEH (mbeh)
 
+Deployed on [shinyapps.io](https://mbeh.shinyapps.io/hw-2/)
+
+
 ### Screenshots
 
 ![Screeenshot of Data Table](screenshots/datatable.png)
 ![Screeenshot of Plot](screenshots/plots.png)
+
 
 ### Data Source
 

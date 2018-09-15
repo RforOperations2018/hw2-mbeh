@@ -1,0 +1,13 @@
+name: hw-2
+title: hw-2
+username:
+account: mbeh
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 448204
+bundleId: 1587519
+url: https://mbeh.shinyapps.io/hw-2/
+when: 1537050524.17842
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: hw2_mbeh.R|README.md|data/movielens-cleaning-pipeline.ipynb|screenshots/.DS_Store|screenshots/datatable.png|screenshots/plots.png|www/.DS_Store
