@@ -29,7 +29,7 @@ sidebar <- dashboardSidebar(
   width = sidebarWidth,
   sidebarMenu(
     id = "tabs",
-    # Sidebar Menu for Plots and DataTable
+    # Sidebar Menu for Plots & DataTable
     menuItem("Visualizations", icon = icon("bar-chart"), tabName = "plots"),
     menuItem("Database", icon = icon("table"), tabName = "table"),
     # Range Slider for Movie Release Year
