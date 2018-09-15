@@ -17,7 +17,7 @@ plotlyDefaultFont <- list(
 )
 
 # load dataset (to be filtered by reactive function later)
-movies.load <- read.csv('movies.csv', stringsAsFactors=FALSE)
+movies.load <- read.csv('data/movies.csv', stringsAsFactors=FALSE)
 genres <- c('Action', 'Animation', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 
             'History', 'Mystery', 'Romance', 'Science Fiction', 'Thriller', 'War')
 # note: these genres do not represent all genres in the dataset, but are particularly popular ones
@@ -117,6 +117,21 @@ server <- function(input, output, session = session) {
     return(movies)
   })
   
+  # A plot showing a line chart of movie budget and revenue over the years
+  output$plot_budget_and_revenue <- renderPlotly({
+    # Aggregate budget and revenue data by year
+    aggregatedDataByYear <- movieData() %>% group_by(release_year) %>% 
+      summarise(budget = mean(budget), revenue = mean(revenue))
+    # Plot movie budget and revenue over the years
+    plot_ly(aggregatedDataByYear, x = ~release_year, y = ~revenue, name = 'Revenue', type = 'scatter', mode = 'lines+markers') %>%
+      add_trace(y = ~budget, name = 'Budget', mode = 'lines+markers') %>%
+      layout(title = "Over the years: Average Revenue vs Budget for Blockbusters",
+             xaxis = list(title = "Year", titlefont = plotlyDefaultFont),
+             yaxis = list(title = "Amount in USD$", titlefont = plotlyDefaultFont),
+             legend = list(orientation = "h", x = 0, y = -0.3),
+             height = 400)
+  })
+  
   # A plot showing a bar chart of average ratings per genre
   output$plot_ratings <- renderPlotly({
     movies <- movieData()
@@ -142,21 +157,6 @@ server <- function(input, output, session = session) {
       layout(title = "Average Ratings by Genre",
              xaxis = list(title = "Genre", titlefont = plotlyDefaultFont),
              yaxis = list(title = "Average Ratings", titlefont = plotlyDefaultFont),
-             height = 400)
-  })
-  
-  # A plot showing a line chart of movie budget and revenue over the years
-  output$plot_budget_and_revenue <- renderPlotly({
-    # Aggregate budget and revenue data by year
-    aggregatedDataByYear <- movieData() %>% group_by(release_year) %>% 
-      summarise(budget = mean(budget), revenue = mean(revenue))
-    # Plot movie budget and revenue over the years
-    plot_ly(aggregatedDataByYear, x = ~release_year, y = ~revenue, name = 'Revenue', type = 'scatter', mode = 'lines+markers') %>%
-      add_trace(y = ~budget, name = 'Budget', mode = 'lines+markers') %>%
-      layout(title = "Over the years: Average Revenue vs Budget for Blockbusters",
-             xaxis = list(title = "Year", titlefont = plotlyDefaultFont),
-             yaxis = list(title = "Amount in USD$", titlefont = plotlyDefaultFont),
-             legend = list(orientation = "h", x = 0, y = -0.3),
              height = 400)
   })
   
@@ -206,7 +206,9 @@ server <- function(input, output, session = session) {
       paste("movies-", Sys.Date(), ".csv", sep="")
     },
     content = function(file) {
-      write.csv(movieData(), file)
+      dataForDownload = subset(movieData() %>% arrange(desc(release_year), desc(revenue)),
+                               select = c(title, genres, release_date, budget, revenue, vote_average))
+      write.csv(dataForDownload, file, row.names=FALSE)
     }
   )
 }
