@@ -82,9 +82,8 @@ body <- dashboardBody(
     # DataTable page, to be displayed when "Table" is clicked on sidebar
     tabItem("table",
             fluidPage(
-              # Interesting way to have the button show up ontop of the box with the custom CSS. Since I know you can handle it, I'd like you to have stuff like this mobile responsive in the future.
-              downloadButton("downloadMovieData","Download Movie Data"),
-              box(title = "Statistics on Movie Selection", DT::dataTableOutput("moviesTable"), width = 12))
+              div(class = "btn-download", downloadButton("downloadMovieData","Download Data")),
+              box(title = "Movie Selection", DT::dataTableOutput("moviesTable"), width = 12))
     )
   )
 )
@@ -157,7 +156,8 @@ server <- function(input, output, session = session) {
       layout(title = "Over the years: Average Revenue vs Budget for Blockbusters",
              xaxis = list(title = "Year", titlefont = plotlyDefaultFont),
              yaxis = list(title = "Amount in USD$", titlefont = plotlyDefaultFont),
-             height = 500)
+             legend = list(orientation = "h", x = 0, y = -0.3),
+             height = 400)
   })
   
   # A plot showing a histogram of movie durations
@@ -166,7 +166,7 @@ server <- function(input, output, session = session) {
       layout(title = "Histogram of Movie Durations",
              xaxis = list(title = "Duration in Seconds", titlefont = plotlyDefaultFont),
              yaxis = list(title = "Number of Movies", titlefont = plotlyDefaultFont),
-             height = 500)
+             height = 400)
     
   })
   
@@ -176,7 +176,7 @@ server <- function(input, output, session = session) {
            select = c(title, genres, release_date, budget, revenue, vote_average))
   }, 
   # Customize column names of Data Table
-  colnames = c("Movie Title", "Genres", "Release Date", "Budget", "Revenue", "Ratings (/10)")
+  colnames = c("Title", "Genre", "Release Date", "Budget", "Revenue", "Ratings (/10)")
   )
   
   # Bookmark functionality: updating the URL bar on user input
