@@ -168,6 +168,38 @@ server <- function(input, output, session = session) {
              height = 500)
     
   })
+  
+  
+  
+  # Data table of Movies (based on reactive selection)
+  output$moviesTable <- DT::renderDataTable({
+    subset(movieData() %>% arrange(desc(release_year), desc(revenue)), 
+           select = c(title, genres, release_date, budget, revenue, vote_average))
+  }, 
+  # Customize column names of Data Table
+  colnames = c("Movie Title", "Genres", "Release Date", "Budget", "Revenue", "Ratings (/10)")
+  )
+  
+  # Bookmark functionality: updating the URL bar on user input
+  observe({
+    print(reactiveValuesToList(input))
+    session$doBookmark()
+  })
+  onBookmarked(function(url) {
+    updateQueryString(url)
+  })
+  
+  # Observe clicks on 'Select All Genres' button
+  observeEvent(input$selectAllGenres, {
+    # Send error notification if all genres have already been selected
+    if (length(input$genreSelect) == length(genres)){
+      showNotification("You have already selected all genres!", type = "error")
+      # Otherwise, update input for genre selection and send success notification
+    }else{
+      updateSelectInput(session, "genreSelect", selected = genres)
+      showNotification("Success! You have selected all genres!", type = "message")
+    }
+  })
 }
 
 # Run the application 
