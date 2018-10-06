@@ -159,6 +159,7 @@ server <- function(input, output, session = session) {
   
   # A plot showing a bar chart of average ratings per genre
   output$plot_ratings <- renderPlotly({
+    # So this actually doesn't work when users don't have any genre's selected
     movies <- movieData()
     # Helper method for converting genre name to its column name in the dataset
     convertGenreToColname <- function(genre){
