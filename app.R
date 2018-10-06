@@ -34,6 +34,17 @@ kaggle.auth <- function() {
 binary.response <- httr::GET(kaggle.api.url, kaggle.auth())
 movies.raw <- read_csv(binary.response$content)
 
+# HW4: Clean downloaded data
+keep_columns <- c('title','vote_average','budget','revenue','runtime','genres','release_date')
+movies.load <- movies.raw %>% filter(runtime > 0,                       # remove films without runtime data
+                                     revenue > 100000, budget > 100000, # remove low-grossing films / films on low budget
+                                     grepl("English",spoken_languages)) %>% # transcribed languages include "English"
+                            
+                    # only keep columns that are relevant to the visualization dashboard
+                    select_(.dots = keep_columns)
+
+# HW4: Compute release_year column as a substring of release_date column
+movies.load$release_year <- substr(movies.load$release_date, 0, 4)
 
 # Define header, sidebar and body of shinydashboard
 header <- dashboardHeader(title = "The Ultimate Movie Collection", titleWidth = sidebarWidth)
