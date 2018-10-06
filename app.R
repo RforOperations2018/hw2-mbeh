@@ -25,6 +25,16 @@ genres <- c('Action', 'Animation', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantas
 pdf(NULL)
 
 
+# HW4: Load movies data from Kaggle API
+kaggle.api.url <- "https://www.kaggle.com/api/v1/datasets/download/rounakbanik/the-movies-dataset/movies_metadata.csv"
+kaggle.auth <- function() {
+  source("./.kaggle/credentials.R")
+  httr::authenticate(kgl_user, kgl_apikey)
+}
+binary.response <- httr::GET(kaggle.api.url, kaggle.auth())
+movies.raw <- read_csv(binary.response$content)
+
+
 # Define header, sidebar and body of shinydashboard
 header <- dashboardHeader(title = "The Ultimate Movie Collection", titleWidth = sidebarWidth)
 sidebar <- dashboardSidebar(
