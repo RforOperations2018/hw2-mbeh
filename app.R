@@ -1,4 +1,4 @@
-# Homework 2
+# Homework 4 (modified from Homework 2)
 # By Min Yan BEH (mbeh)
 
 library(readr)
@@ -24,7 +24,6 @@ genres <- c('Action', 'Animation', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantas
 # note: these genres do not represent all genres in the dataset, but are particularly popular ones
 pdf(NULL)
 
-
 # HW4: Load movies data from Kaggle API
 kaggle.api.url <- "https://www.kaggle.com/api/v1/datasets/download/rounakbanik/the-movies-dataset/movies_metadata.csv"
 kaggle.auth <- function() {
@@ -39,9 +38,9 @@ keep_columns <- c('title','vote_average','budget','revenue','runtime','genres','
 movies.load <- movies.raw %>% filter(runtime > 0,                       # remove films without runtime data
                                      revenue > 100000, budget > 100000, # remove low-grossing films / films on low budget
                                      grepl("English",spoken_languages)) %>% # transcribed languages include "English"
-                            
-                    # only keep columns that are relevant to the visualization dashboard
-                    select_(.dots = keep_columns)
+  
+  # only keep columns that are relevant to the visualization dashboard
+  select_(.dots = keep_columns)
 
 # HW4: Compute release_year column as a substring of release_date column
 movies.load$release_year <- substr(movies.load$release_date, 0, 4)
@@ -203,7 +202,7 @@ server <- function(input, output, session = session) {
               # Customize column names of Data Table
               colnames = c("Title", "Genre", "Release Date", "Budget", "Revenue", "Ratings (/10)")
               #options = list(dom = 't', ordering = FALSE)
-              ) %>% formatCurrency(columns=c('budget', 'revenue'), digits = 0)
+    ) %>% formatCurrency(columns=c('budget', 'revenue'), digits = 0)
   }) 
   
   # Observe 'genreSelection' input for addition of genres
