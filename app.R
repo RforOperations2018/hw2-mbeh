@@ -1,9 +1,13 @@
 # Homework 2
 # By Min Yan BEH (mbeh)
 
+library(readr)
+library(httr)
 library(shiny)
+library(shinyjs)
 library(shinydashboard)
 library(reshape2)
+library(DT)
 library(dplyr)
 library(plotly)
 library(RColorBrewer)
@@ -15,13 +19,11 @@ plotlyDefaultFont <- list(
   size = 18,
   color = "#000000"
 )
-
-# load dataset (to be filtered by reactive function later)
-movies.load <- read.csv('data/movies.csv', stringsAsFactors=FALSE)
 genres <- c('Action', 'Animation', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 
             'History', 'Mystery', 'Romance', 'Science Fiction', 'Thriller', 'War')
 # note: these genres do not represent all genres in the dataset, but are particularly popular ones
 pdf(NULL)
+
 
 # Define header, sidebar and body of shinydashboard
 header <- dashboardHeader(title = "The Ultimate Movie Collection", titleWidth = sidebarWidth)
@@ -62,6 +64,7 @@ sidebar <- dashboardSidebar(
   )
 )
 body <- dashboardBody(
+  useShinyjs(),  # set up shinyjs
   # import custom css stylesheet
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "main.css"),
@@ -100,7 +103,7 @@ server <- function(input, output, session = session) {
   movieData <- reactive({
     # Helper function for determining if a movie contains a genre within list of selected genres
     movieMatchesGenreInput <- function(genresString, selectedGenres){
-      genresForEachRow = strsplit(genresString, ",")
+      genresForEachRow = strsplit(genresString, "\"")
       outcome = c()
       for(row in genresForEachRow){
         outcome <- c(outcome, length(intersect(row, selectedGenres)) > 0)
@@ -169,26 +172,40 @@ server <- function(input, output, session = session) {
              xaxis = list(title = "Duration in Seconds", titlefont = plotlyDefaultFont),
              yaxis = list(title = "Number of Movies", titlefont = plotlyDefaultFont),
              height = 400)
-    
   })
   
   # Data table of Movies (based on reactive selection)
-  output$moviesTable <- DT::renderDataTable({
-    subset(movieData() %>% arrange(desc(release_year), desc(revenue)), 
-           select = c(title, genres, release_date, budget, revenue, vote_average))
-  }, 
-  # Customize column names of Data Table
-  colnames = c("Title", "Genre", "Release Date", "Budget", "Revenue", "Ratings (/10)")
-  )
-
+  output$moviesTable <- renderDataTable({
+    data <- subset(movieData() %>% arrange(desc(release_year), desc(revenue)),
+                   select = c(title, genres, release_date, budget, revenue, vote_average))
+    datatable(data, rownames = FALSE,
+              # Customize column names of Data Table
+              colnames = c("Title", "Genre", "Release Date", "Budget", "Revenue", "Ratings (/10)")
+              #options = list(dom = 't', ordering = FALSE)
+              ) %>% formatCurrency(columns=c('budget', 'revenue'), digits = 0)
+  }) 
+  
+  # Observe 'genreSelection' input for addition of genres
+  observeEvent(input$genreSelect, {
+    # Show 'Select All Genres' button if some genres have not been selected
+    if (length(input$genreSelect) < length(genres)){
+      show(id = "selectAllGenres", anim = TRUE, animType = "fade", time = 0.3)
+    }else {
+      # hide 'Select All Genres' button if all genres are selected
+      hide(id = "selectAllGenres", anim = TRUE, animType = "fade", time = 0.3)
+    }
+  })
+  
   # Observe clicks on 'Select All Genres' button
   observeEvent(input$selectAllGenres, {
     # Send error notification if all genres have already been selected
     if (length(input$genreSelect) == length(genres)){
+      shinyjs::disable("Button1")
       showNotification("You have already selected all genres!", type = "error")
       # Otherwise, update input for genre selection and send success notification
     }else{
       updateSelectInput(session, "genreSelect", selected = genres)
+      hide(id = "selectAllGenres", anim = TRUE, animType = "fade", time = 0.3)
       showNotification("Success! You have selected all genres!", type = "message")
     }
   })
