@@ -2,8 +2,9 @@
 
 By: Min Yan BEH (mbeh)
 
-Deployed on [shinyapps.io](https://mbeh.shinyapps.io/hw-2/)
-
+Deployed on shinyapps.io:
+* [Link to HW2](https://mbeh.shinyapps.io/hw-2/)
+* [Link to HW4](https://mbeh.shinyapps.io/hw-4/)
 
 ### Screenshots
 
